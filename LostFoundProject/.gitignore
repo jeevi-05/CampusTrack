@@ -1,0 +1,16 @@
+# Java / Spring
+target/
+*.jar
+
+# Eclipse
+.metadata/
+.settings/
+.classpath
+.project
+
+# Node
+node_modules/
+
+# IDE
+.vscode/
+.idea/
