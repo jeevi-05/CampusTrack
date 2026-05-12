@@ -11,12 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import com.infosys.lostFoundApplication.bean.LostfoundUser;
 import com.infosys.lostFoundApplication.dao.LostfoundUserRepository;
 import com.infosys.lostFoundApplication.service.LostfoundUserService;
-
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 @RestController
 @RequestMapping("/lostfound")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true") 
