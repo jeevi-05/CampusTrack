@@ -1,56 +1,26 @@
-import axios from "axios";
+import axiosInstance from "./axiosConfig";
 
-const LOST_URL = 'http://localhost:8080/lostfound/lost';
-const ID_URL = 'http://localhost:8080/lostfound/lost-id';
-const USR_URL = 'http://localhost:8080/lostfound/lost-user';
+const LOST_URL = "/lostfound/lost";
+const ID_URL   = "/lostfound/lost-id";
+const USR_URL  = "/lostfound/lost-user";
 
-export const saveLostItem = (lostItem) => {
-    return axios.post(LOST_URL, lostItem, {
-        withCredentials: true
-    });
-};
+export const saveLostItem = (lostItem) =>
+    axiosInstance.post(LOST_URL, lostItem);
 
-export const getAllLostItems=()=> {
-    return axios.get(LOST_URL, {
-        withCredentials: true
-    });
-}
- 
-export const getLostItemById=(id)=> {
-    return axios.get(`${LOST_URL}/${id}`, {
-        withCredentials: true
-    });
-}
+export const getAllLostItems = () =>
+    axiosInstance.get(LOST_URL);
 
-export const deleteLostItemById=(id)=> {
-   return axios.delete(`${LOST_URL}/${id}`, {
-        withCredentials: true
-    });
-}
+export const getLostItemById = (id) =>
+    axiosInstance.get(`${LOST_URL}/${id}`);
 
-export const updateLostItem=(lostItem)=> {
-    return axios.put(LOST_URL, lostItem, {
-        withCredentials: true
-    });
-    }
+export const deleteLostItemById = (id) =>
+    axiosInstance.delete(`${LOST_URL}/${id}`);
 
-export const generateId=()=> {
-    return axios.get(ID_URL, {
-        withCredentials: true
-    });
-}
+export const updateLostItem = (lostItem) =>
+    axiosInstance.put(LOST_URL, lostItem);
 
-export const getLostItemsByUsername=()=>{
-        return axios.get(USR_URL, {
-            withCredentials: true
-        });
-    }
+export const generateId = () =>
+    axiosInstance.get(ID_URL);
 
-
-
-
-
-
-
-
-
+export const getLostItemsByUsername = () =>
+    axiosInstance.get(USR_URL);

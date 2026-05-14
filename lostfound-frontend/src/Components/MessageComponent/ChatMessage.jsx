@@ -68,7 +68,8 @@ const ChatMessage = () => {
       return;
     }
 
-    const socket = new SockJS("http://localhost:8080/lostfound/ws");
+    const wsUrl = (process.env.REACT_APP_API_URL || "http://localhost:8080") + "/lostfound/ws";
+    const socket = new SockJS(wsUrl);
 
     stompClient = new Client({
       webSocketFactory: () => socket,

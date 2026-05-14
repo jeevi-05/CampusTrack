@@ -1,14 +1,9 @@
-import axios from 'axios';
+import axiosInstance from "./axiosConfig";
 
-const MATCH_URL='http://localhost:8080/lostfound/match';
+const MATCH_URL = "/lostfound/match";
 
-export const saveMatchItem=(matchItem)=>{
-    return axios.post(MATCH_URL, matchItem,{
-        withCredentials:true
-    });
-};
-export const getAllMatchItems=()=>{
-    return axios.get(MATCH_URL,{
-        withCredentials:true
-    });
-}
+export const saveMatchItem = (matchItem) =>
+    axiosInstance.post(MATCH_URL, matchItem);
+
+export const getAllMatchItems = () =>
+    axiosInstance.get(MATCH_URL);

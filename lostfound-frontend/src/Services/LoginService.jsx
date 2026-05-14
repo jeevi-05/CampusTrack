@@ -1,78 +1,33 @@
-import axios from "axios";
+import axiosInstance from "./axiosConfig";
 
-const BASE_URL = 'http://localhost:8080/lostfound';
-const LOGIN_URL = `${BASE_URL}/login`;
-const REGISTER_URL = `${BASE_URL}/register`;
-const ROLE_URL = `${BASE_URL}/role`;
-const USER_URL = `${BASE_URL}/user`;
-const LOGOUT_URL = `${BASE_URL}/logout`;
+const BASE = "/lostfound";
 
+export const registerNewUser = (user) =>
+    axiosInstance.post(`${BASE}/register`, user);
 
-// -------------------- REGISTER --------------------
-export const registerNewUser = (user) => {
-    // user = { userId: "john", password: "1234", otherFields... }
-    return axios.post(REGISTER_URL, user, {
-        withCredentials: true
-    });
-};
+export const validateUser = (user) =>
+    axiosInstance.post(`${BASE}/login`, user);
 
-// -------------------- LOGIN --------------------
-export const validateUser = (user) => {
-    // user = { userId: "john", password: "1234" }
-    return axios.post(LOGIN_URL, user, {
-        withCredentials: true
-    });
-};
+export const getUserDetails = () =>
+    axiosInstance.get(`${BASE}/login`);
 
-// -------------------- GET USER DETAILS --------------------
-export const getUserDetails = () => {
-    return axios.get(LOGIN_URL, {
-        withCredentials: true
-    });
-};
+export const getUserId = () =>
+    axiosInstance.get(`${BASE}/user`);
 
+export const getRole = () =>
+    axiosInstance.get(`${BASE}/role`);
 
-export const getUserId = () => {
-    return axios.get(USER_URL, {
-        withCredentials: true
-    });
-};
+export const logoutUser = () =>
+    axiosInstance.post(`${BASE}/logout`, {});
 
+export const getAllUsers = () =>
+    axiosInstance.get(`${BASE}/admin/users`);
 
-export const getRole = () => {
-    return axios.get(ROLE_URL, {
-        withCredentials: true
-    });
-};
+export const getAllStudents = () =>
+    axiosInstance.get(`${BASE}/admin/users`);
 
+export const deleteUser = (username) =>
+    axiosInstance.delete(`${BASE}/admin/users/${username}`);
 
-export const logoutUser = () => {
-    return axios.post(LOGOUT_URL, {}, {
-        withCredentials: true
-    });
-};
-
-export const getAllUsers = () => {
-    return axios.get(`${BASE_URL}/admin/users`, {
-        withCredentials: true
-    });
-};
-
-export const getAllStudents = () => {
-    return axios.get(`${BASE_URL}/admin/users`, {
-        withCredentials: true
-    });
-}
-
-export const deleteUser = (username) => {
-    return axios.delete(`${BASE_URL}/admin/users/${username}`, {
-        withCredentials: true,
-    });
-};
-
-export const getCounts = () => {
-    return axios.get(`${BASE_URL}/counts`, {
-        withCredentials: true
-    });
-};
-
+export const getCounts = () =>
+    axiosInstance.get(`${BASE}/counts`);
