@@ -68,7 +68,7 @@ const ChatMessage = () => {
       return;
     }
 
-    const wsUrl = (process.env.REACT_APP_API_URL || "http://localhost:8080") + "/lostfound/ws";
+    const wsUrl = (process.env.REACT_APP_API_URL || "https://campustrack-backend.onrender.com") + "/lostfound/ws";
     const socket = new SockJS(wsUrl);
 
     stompClient = new Client({
