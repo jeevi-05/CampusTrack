@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: campustrack-backend
+    runtime: docker
+    rootDir: LostFoundProject/lostFoundApplication
+    dockerfilePath: LostFoundProject/lostFoundApplication/Dockerfile
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRATION
+        value: 86400000
+      - key: FRONTEND_URL
+        value: https://campustrack-frontend.onrender.com
+
+  - type: web
+    name: campustrack-frontend
+    runtime: docker
+    rootDir: lostfound-frontend
+    dockerfilePath: lostfound-frontend/Dockerfile
+    buildArgs:
+      - key: REACT_APP_API_URL
+        value: https://campustrack-backend.onrender.com
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://campustrack-backend.onrender.com

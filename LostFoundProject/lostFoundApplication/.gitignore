@@ -1,11 +1,11 @@
-# Eclipse workspace metadata
-LostFoundProject/.metadata/
+target/
+*.jar
+*.class
+*.war
 
-# Build folders
-LostFoundProject/target/
-LostFoundProject/build/
-
-# IDE-specific
-LostFoundProject/.idea/
-LostFoundProject/.vscode/
-LostFoundProject/*.iml
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+.vscode/
