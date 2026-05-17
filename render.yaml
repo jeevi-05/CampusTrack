@@ -3,7 +3,6 @@ services:
     name: campustrack-backend
     runtime: docker
     rootDir: LostFoundProject/lostFoundApplication
-    dockerfilePath: LostFoundProject/lostFoundApplication/Dockerfile
     envVars:
       - key: DB_URL
         sync: false
@@ -22,7 +21,6 @@ services:
     name: campustrack-frontend
     runtime: docker
     rootDir: lostfound-frontend
-    dockerfilePath: lostfound-frontend/Dockerfile
     buildArgs:
       - key: REACT_APP_API_URL
         value: https://campustrack-backend.onrender.com

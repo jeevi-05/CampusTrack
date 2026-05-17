@@ -1,19 +1,19 @@
 package com.infosys.lostFoundApplication.config;
 
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.IOException;
 
 @Configuration
 @EnableMethodSecurity
@@ -24,31 +24,47 @@ public class SystemConfig {
         return configuration.getAuthenticationManager();
     }
 
+    // ── Manual CORS filter — runs BEFORE Spring Security ──────────────────────
+    // This is the most reliable approach: write headers directly on every request.
     @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
+    public OncePerRequestFilter corsFilter() {
+        return new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            FilterChain filterChain)
+                    throws ServletException, IOException {
 
-        // Allow all these origins — covers local dev + both Render deployments
-        config.setAllowedOrigins(Arrays.asList(
-            "http://localhost:3000",
-            "https://campustrack-frontend.onrender.com"
-        ));
+                String origin = request.getHeader("Origin");
 
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(Arrays.asList("*"));
-        config.setExposedHeaders(Arrays.asList("Set-Cookie"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
+                // Allow both local dev and production frontend
+                if (origin != null && (
+                        origin.equals("http://localhost:3000") ||
+                        origin.equals("https://campustrack-frontend.onrender.com")
+                )) {
+                    response.setHeader("Access-Control-Allow-Origin", origin);
+                    response.setHeader("Access-Control-Allow-Credentials", "true");
+                    response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
+                    response.setHeader("Access-Control-Allow-Headers", "*");
+                    response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+                    response.setHeader("Access-Control-Max-Age", "3600");
+                }
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
+                // Handle preflight OPTIONS request — return 200 immediately
+                if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    return;
+                }
+
+                filterChain.doFilter(request, response);
+            }
+        };
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(Customizer.withDefaults())
+            .cors(cors -> cors.disable())   // disable Spring's CORS — our filter handles it
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/lostfound/login/**").permitAll()
