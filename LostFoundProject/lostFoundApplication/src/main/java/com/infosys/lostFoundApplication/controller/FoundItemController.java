@@ -14,7 +14,6 @@ import com.infosys.lostFoundApplication.service.LostfoundUserService;
 
 @RestController
 @RequestMapping("/lostfound/")
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class FoundItemController {
 
 	@Autowired
