@@ -45,7 +45,7 @@ public class SystemConfig {
                     response.setHeader("Access-Control-Allow-Origin", origin);
                     response.setHeader("Access-Control-Allow-Credentials", "true");
                     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-                    response.setHeader("Access-Control-Allow-Headers", "*");
+                    response.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With, Accept, Origin, Access-Control-Request-Method, Access-Control-Request-Headers");
                     response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
                     response.setHeader("Access-Control-Max-Age", "3600");
                 }
