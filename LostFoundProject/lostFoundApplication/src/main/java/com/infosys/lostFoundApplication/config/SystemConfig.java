@@ -19,7 +19,7 @@ import java.util.List;
 @EnableMethodSecurity
 public class SystemConfig {
 
-    @Value("${app.cors.allowed-origin:http://localhost:3000}")
+    @Value("${app.cors.allowed-origin:https://campustrack-frontend.onrender.com}")
     private String allowedOrigin;
 
     @Bean
@@ -29,39 +29,67 @@ public class SystemConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowedOrigins(List.of(allowedOrigin));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        config.setAllowedMethods(
+                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        );
+
         config.setAllowedHeaders(List.of("*"));
+
         config.setAllowCredentials(true);
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
+
         return source;
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
-            .cors(Customizer.withDefaults())
-            .csrf(csrf -> csrf.disable())
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/lostfound/login/**").permitAll()
-                .requestMatchers("/lostfound/logout").permitAll()
-                .requestMatchers("/lostfound/register").permitAll()
-                .requestMatchers("/lostfound/ws/**").permitAll()
-                .requestMatchers("/lostfound/admin/**").permitAll()
-                .requestMatchers("/lostfound/**").permitAll()
-                .anyRequest().authenticated()
-            )
-            .logout(logout -> logout
-                .logoutUrl("/lostfound/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    response.setStatus(200);
-                    response.getWriter().write("Logout success");
-                })
-            );
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+
+                .authorizeHttpRequests(auth -> auth
+
+                        .requestMatchers("/lostfound/login/**").permitAll()
+
+                        .requestMatchers("/lostfound/logout").permitAll()
+
+                        .requestMatchers("/lostfound/register").permitAll()
+
+                        .requestMatchers("/lostfound/ws/**").permitAll()
+
+                        .requestMatchers("/lostfound/admin/**").permitAll()
+
+                        .requestMatchers("/lostfound/**").permitAll()
+
+                        .anyRequest().authenticated()
+                )
+
+                .logout(logout -> logout
+
+                        .logoutUrl("/lostfound/logout")
+
+                        .invalidateHttpSession(true)
+
+                        .deleteCookies("JSESSIONID")
+
+                        .logoutSuccessHandler((request, response, authentication) -> {
+
+                            response.setStatus(200);
+
+                            response.getWriter().write("Logout success");
+                        })
+                );
+
         return http.build();
     }
 }
