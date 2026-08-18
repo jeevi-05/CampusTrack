@@ -60,9 +60,23 @@ public class LostfoundUserService implements UserDetailsService{
 	// validate an existing user from database
 		@Override
 		public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-			 this.user=repository.findById(username).get();
-			this.userId=user.getUsername();
-			this.role=user.getRole();
-			return this.user;
+			java.util.Optional<LostfoundUser> opt = repository.findById(username);
+			LostfoundUser found = null;
+			if (opt.isPresent()) {
+				found = opt.get();
+			} else {
+				opt = repository.findByEmail(username);
+				if (opt.isPresent()) {
+					found = opt.get();
+				}
+			}
+			if (found == null) {
+				throw new UsernameNotFoundException("User not found: " + username);
+			}
+
+			this.user = found;
+			this.userId = found.getUsername();
+			this.role = found.getRole();
+			return found;
 		}
 }

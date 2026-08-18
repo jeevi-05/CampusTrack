@@ -6,6 +6,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -37,11 +39,10 @@ public class SystemConfig {
 
                 String origin = request.getHeader("Origin");
 
-                // Allow both local dev and production frontend
-                if (origin != null && (
-                        origin.equals("http://localhost:3000") ||
-                        origin.equals("https://campustrack-frontend.onrender.com")
-                )) {
+                // Echo back the Origin for development convenience so the browser
+                // receives an Access-Control-Allow-Origin header. In production
+                // you may want to restrict this to known frontends.
+                if (origin != null && !origin.isEmpty()) {
                     response.setHeader("Access-Control-Allow-Origin", origin);
                     response.setHeader("Access-Control-Allow-Credentials", "true");
                     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
@@ -59,6 +60,17 @@ public class SystemConfig {
                 filterChain.doFilter(request, response);
             }
         };
+    }
+
+    // Ensure the CORS filter runs before Spring Security by registering it
+    // with highest precedence. This forces preflight and CORS headers to be
+    // applied even when Spring Security would otherwise respond first.
+    @Bean
+    public FilterRegistrationBean<OncePerRequestFilter> corsFilterRegistration() {
+        FilterRegistrationBean<OncePerRequestFilter> registration = new FilterRegistrationBean<>(corsFilter());
+        registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        registration.addUrlPatterns("/*");
+        return registration;
     }
 
     @Bean

@@ -21,10 +21,13 @@ const RegisterPage = () => {
 const createNewUser = async (event) => {
   event.preventDefault();
   try {
-    await registerNewUser(lostFoundUser);
+    console.debug("Submitting registration payload:", lostFoundUser);
+    const resp = await registerNewUser(lostFoundUser);
+    console.debug("Registration response:", resp && resp.status);
     // Success
     setErrors({ success: "User registered successfully! Please login.", error: "" });
   } catch (err) {
+    console.error("Registration error:", err);
     // Error
     setErrors({ success: "", error: "Registration failed. Please try again." });
   }

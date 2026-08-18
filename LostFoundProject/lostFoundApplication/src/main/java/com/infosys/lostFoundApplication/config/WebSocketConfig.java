@@ -11,7 +11,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/lostfound/ws").setAllowedOriginPatterns("*").withSockJS();
+		registry.addEndpoint("/lostfound/ws")
+				.setAllowedOriginPatterns("*")
+				.addInterceptors(new WebSocketHandshakeInterceptor())
+				.withSockJS();
 	}
 	
 	@Override

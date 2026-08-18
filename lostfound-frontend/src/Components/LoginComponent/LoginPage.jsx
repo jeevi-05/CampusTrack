@@ -23,6 +23,7 @@ const LoginPage = () => {
         password: loginData.password,
       };
 
+      console.debug("Submitting login payload:", payload);
       const response = await validateUser(payload);
 
        
